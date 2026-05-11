@@ -224,7 +224,7 @@ export default function CellDetailPanel({ cell, onClose }) {
       </div>
 
       <div className="px-4 py-2 border-t border-gray-800 mt-auto">
-        <div className="text-gray-700 text-[9px] tracking-widest uppercase">JIIT NOC · QBits · ITU UMC Hackathon 2025–26</div>
+        <div className="text-gray-700 text-[9px] tracking-widest uppercase">QBits · ITU UMC Hackathon 2025–26</div>
       </div>
     </div>
   );

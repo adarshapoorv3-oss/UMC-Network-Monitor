@@ -44,14 +44,14 @@ const CELL_DEFS = {
   D2: { tier:"Strong",   landmark:"Play Ground",            female_pct:36, btype:"outdoor" },
   D3: { tier:"Strong",   landmark:"ECE Lab Block ABB-1",    female_pct:44, btype:"lab" },
   D4: { tier:"Strong",   landmark:"Faculty Residences",     female_pct:51, btype:"residential" },
-  D5: { tier:"Weak",     landmark:"Boys Hostel Block 3",    female_pct:2,  btype:"hostel_male" },
-  D6: { tier:"Dead Zone",landmark:"Girls Hostel Block 4",   female_pct:96, btype:"hostel_female" },
+  D5: { tier:"Weak",     landmark:"Boys Hostel Block 3",    female_pct:0,  btype:"hostel_male" },
+  D6: { tier:"Dead Zone",landmark:"Girls Hostel Block 4",   female_pct:100, btype:"hostel_female" },
   E1: { tier:"Weak",     landmark:"JBS Block",              female_pct:39, btype:"academic" },
   E2: { tier:"Strong",   landmark:"Main Auditorium",        female_pct:53, btype:"common" },
   E3: { tier:"Strong",   landmark:"Chancellor's Residence", female_pct:49, btype:"admin" },
   E4: { tier:"Weak",     landmark:"Annapurna Mess",         female_pct:54, btype:"common" },
   E5: { tier:"Dead Zone",landmark:"Medical Centre",         female_pct:62, btype:"health" },
-  E6: { tier:"Dead Zone",landmark:"Girls Hostel Block 5",   female_pct:94, btype:"hostel_female" },
+  E6: { tier:"Dead Zone",landmark:"Girls Hostel Block 5",   female_pct:100, btype:"hostel_female" },
   F1: { tier:"Dead Zone",landmark:"ECE Department Block",   female_pct:43, btype:"academic" },
   F2: { tier:"Weak",     landmark:"MBA Department",         female_pct:58, btype:"academic" },
   F3: { tier:"Strong",   landmark:"Chancellor's Backyard",  female_pct:45, btype:"outdoor" },
@@ -73,7 +73,7 @@ function getBaselineMetrics(tier, seed) {
     return {
       rsrp:          seededRand(seed,    -83,  -65),
       sinr:          seededRand(seed+1,   16,   29),
-      downloadSpeed: seededRand(seed+2,   42,   94),
+      downloadSpeed: seededRand(seed+2,   30,   80),
       uploadSpeed:   seededRand(seed+3,   18,   48),
       latency:       seededRand(seed+4,    8,   24, 0),
     };
@@ -81,7 +81,7 @@ function getBaselineMetrics(tier, seed) {
     return {
       rsrp:          seededRand(seed,   -103,  -84),
       sinr:          seededRand(seed+1,    3,   13),
-      downloadSpeed: seededRand(seed+2,    9,   38),
+      downloadSpeed: seededRand(seed+2,    5,   25),
       uploadSpeed:   seededRand(seed+3,    3,   15),
       latency:       seededRand(seed+4,   42,   88, 0),
     };
@@ -91,7 +91,7 @@ function getBaselineMetrics(tier, seed) {
       sinr:          seededRand(seed+1,   -5,    2),
       downloadSpeed: seededRand(seed+2,  0.4,    7),
       uploadSpeed:   seededRand(seed+3,  0.1,  2.5),
-      latency:       seededRand(seed+4,  130,  290, 0),
+      latency:       seededRand(seed+4,  200,  500, 0),
     };
   }
 }

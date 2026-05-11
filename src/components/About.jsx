@@ -1,7 +1,7 @@
 const TEAM = [
   { name:"Apoorv Adarsh",   role:"Lead Developer",     focus:"RF Data Simulation · Map Integration · ETL Pipeline", initials:"AA", color:"#06b6d4" },
-  { name:"Krishiv Sharma",  role:"Data Analyst",       focus:"HDDI Modelling · Sensitivity Analysis · Dashboard Design", initials:"KS", color:"#8b5cf6" },
-  { name:"Piyush Prakash",  role:"Systems Architect",  focus:"Grid Framework · Coverage Tier Logic · Delhi NCR Scaling", initials:"PP", color:"#f59e0b" },
+  { name:"Aditya Jain",  role:"Data Analyst",       focus:"HDDI Modelling · Sensitivity Analysis · Dashboard Design", initials:"KS", color:"#8b5cf6" },
+  { name:"Tarun Bansal",  role:"Systems Architect",  focus:"Grid Framework · Coverage Tier Logic · Delhi NCR Scaling", initials:"PP", color:"#f59e0b" },
 ];
 
 const LAYERS = [
@@ -67,8 +67,7 @@ export default function About() {
             </span>
           </div>
           <p className="text-gray-500 text-sm leading-relaxed max-w-2xl mx-auto mt-3">
-            A dual-purpose system: (1) Academic Minor Project — ECE Department, JIIT Noida, and
-            (2) Engineered Innovation Layer — ITU UMC Data Hackathon 2025–2026
+            Engineered Innovation Layer — ITU UMC Data Hackathon 2025–2026
             "Bridging the Digital Divide by Uncovering Hidden Digital Deserts."
           </p>
         </div>
@@ -169,19 +168,6 @@ export default function About() {
           </div>
         </div>
 
-        {/* ── Guide ── */}
-        <div className="rounded-2xl border border-gray-800 bg-gray-900/40 p-5 flex items-center gap-5">
-          <div className="w-14 h-14 rounded-xl flex items-center justify-center text-base font-bold flex-shrink-0"
-            style={{ background:"#22c55e18", border:"2px solid #22c55e44", color:"#22c55e" }}>
-            Dr.
-          </div>
-          <div>
-            <div className="text-[10px] uppercase tracking-widest text-gray-600 mb-0.5">Project Guide</div>
-            <div className="text-white font-bold">Dr. Shivani</div>
-            <div className="text-green-500 text-xs mt-0.5">Assistant Professor · ECE Department</div>
-            <div className="text-gray-600 text-[11px] mt-1">Jaypee Institute of Information Technology, Noida, Uttar Pradesh</div>
-          </div>
-        </div>
 
         {/* ── Tech Stack ── */}
         <div>
@@ -210,7 +196,7 @@ export default function About() {
         </div>
 
         <div className="text-center text-gray-800 text-[10px] pb-4">
-          JIIT Campus Network Monitor · ECE Dept · Academic Project 2025–26 · ITU UMC Hackathon Team QBits
+         Academic Project 2025–26 · ITU UMC Hackathon Team QBits
         </div>
       </div>
     </div>

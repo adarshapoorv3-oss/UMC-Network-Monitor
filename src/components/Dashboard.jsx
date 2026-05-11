@@ -513,11 +513,11 @@ export default function Dashboard() {
 
       {/* ── Coverage Summary Cards ── */}
       <div className="grid grid-cols-3 gap-4">
-        <StatCard label="Strong Coverage" value={SUMMARY.strong} color="#22c55e" icon="✓"
+        <StatCard label="Strong Coverage" value={SUMMARY.strong} color="#22c55e" 
           sub={`${Math.round((SUMMARY.strong/TOTAL_CELLS)*100)}% of campus · TRAI claims ${85}%`} />
-        <StatCard label="Weak Signal" value={SUMMARY.weak} color="#f59e0b" icon="~"
+        <StatCard label="Weak Signal" value={SUMMARY.weak} color="#f59e0b" 
           sub={`${Math.round((SUMMARY.weak/TOTAL_CELLS)*100)}% · needs improvement`} />
-        <StatCard label="Dead Zones" value={SUMMARY.dead} color="#ef4444" icon="✗"
+        <StatCard label="Dead Zones" value={SUMMARY.dead} color="#ef4444" 
           sub={`${Math.round((SUMMARY.dead/TOTAL_CELLS)*100)}% · TRAI claims 5%`} />
       </div>
 
