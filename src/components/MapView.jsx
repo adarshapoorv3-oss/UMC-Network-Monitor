@@ -17,61 +17,65 @@ function getLShapePolygon() {
     CENTER_LON + (ci - 2.5) * CELL_SIZE_LON,
   ];
   return [
-    pt(-0.5, -0.5),
-    pt(-0.5,  2.5),
-    pt( 2.5,  2.5),
-    pt( 2.5,  5.5),
-    pt( 5.5,  5.5),
-    pt( 5.5, -0.5),
-    pt(-0.5, -0.5),
+    pt(-0.5, -0.5), pt(-0.5,  2.5), pt( 2.5,  2.5),
+    pt( 2.5,  5.5), pt( 5.5,  5.5), pt( 5.5, -0.5), pt(-0.5, -0.5),
   ];
 }
 
 const MAP_MODES = [
-  { id:"coverage",  label:"Coverage",      icon:"📡" },
-  { id:"hddi",      label:"HDDI",          icon:"🔍" },
-  { id:"gender",    label:"Gender",        icon:"👩" },
-  { id:"peak",      label:"Peak Hour",     icon:"⏱" },
+  { id:"coverage", label:"Coverage",  icon:"📡" },
+  { id:"hddi",     label:"HDDI",      icon:"🔍" },
+  { id:"gender",   label:"Gender",    icon:"👩" },
+  { id:"peak",     label:"Peak Hour", icon:"⏱"  },
 ];
+
+// ── Gender colours: hot-pink → fuchsia → indigo → sky-blue ──────────────
+// Immediately readable: warm = female-majority, cool = male-majority
+const GENDER_COLORS = {
+  high:   "#f43f5e",   // rose-500   — ≥70% female
+  mid:    "#e879f9",   // fuchsia-400 — 50–70% female
+  low:    "#818cf8",   // indigo-400  — 35–50% female
+  vlow:   "#38bdf8",   // sky-400     — <35% female
+};
+
+function getGenderColor(female_pct) {
+  if (female_pct >= 70) return GENDER_COLORS.high;
+  if (female_pct >= 50) return GENDER_COLORS.mid;
+  if (female_pct >= 35) return GENDER_COLORS.low;
+  return GENDER_COLORS.vlow;
+}
 
 function getCellColor(cell, mode) {
   if (mode === "coverage") return cell.color;
   if (mode === "hddi")     return cell.hddiColor;
-  if (mode === "gender") {
-    const pct = cell.female_pct;
-    if (pct >= 70) return "#a855f7";
-    if (pct >= 50) return "#8b5cf6";
-    if (pct >= 35) return "#6d28d9";
-    return "#4c1d95";
-  }
+  if (mode === "gender")   return getGenderColor(cell.female_pct);
   if (mode === "peak") {
-    if (cell.peakApp.met === 0)  return "#ef4444";
-    if (cell.peakApp.met === 1)  return "#f59e0b";
-    if (cell.peakApp.met === 2)  return "#22d3ee";
+    if (cell.peakApp.met === 0) return "#ef4444";
+    if (cell.peakApp.met === 1) return "#f59e0b";
+    if (cell.peakApp.met === 2) return "#22d3ee";
     return "#22c55e";
   }
   return cell.color;
 }
 
 export default function MapView({ onSelectCell, selectedCell }) {
-  const mapRef          = useRef(null);
-  const mapInstanceRef  = useRef(null);
-  const [hoveredCell, setHoveredCell] = useState(null);
-  const [tooltipPos, setTooltipPos]   = useState({ x:0, y:0 });
-  const rectLayersRef   = useRef([]);
-  const [mapMode, setMapMode]         = useState("coverage");
+  const mapRef         = useRef(null);
+  const mapInstanceRef = useRef(null);
+  const [hoveredCell, setHoveredCell]   = useState(null);
+  const [tooltipPos, setTooltipPos]     = useState({ x:0, y:0 });
+  const rectLayersRef  = useRef([]);
+  const [mapMode, setMapMode]           = useState("coverage");
 
   // Update colours on mode change
   useEffect(() => {
     rectLayersRef.current.forEach(({ id, rect }) => {
       const cell = GRID_DATA.find(c => c.id === id);
       if (!cell) return;
-      const color = getCellColor(cell, mapMode);
+      const color     = getCellColor(cell, mapMode);
       const isSelected = selectedCell && id === selectedCell.id;
       rect.setStyle({
-        color:       color,
-        fillColor:   color,
-        fillOpacity: isSelected ? 0.70 : 0.40,
+        color, fillColor: color,
+        fillOpacity: isSelected ? 0.75 : 0.50,
         weight:      isSelected ? 3 : 1.5,
       });
     });
@@ -84,9 +88,9 @@ export default function MapView({ onSelectCell, selectedCell }) {
       if (!cell) return;
       const color = getCellColor(cell, mapMode);
       if (selectedCell && id === selectedCell.id) {
-        rect.setStyle({ weight:3, fillOpacity:0.70, color, fillColor:color });
+        rect.setStyle({ weight:3, fillOpacity:0.75, color, fillColor:color });
       } else {
-        rect.setStyle({ weight:1.5, fillOpacity:0.40, color, fillColor:color });
+        rect.setStyle({ weight:1.5, fillOpacity:0.50, color, fillColor:color });
       }
     });
   }, [selectedCell, mapMode]);
@@ -132,12 +136,12 @@ export default function MapView({ onSelectCell, selectedCell }) {
         color:       cell.color,
         weight:      1.5,
         fillColor:   cell.color,
-        fillOpacity: 0.40,
+        fillOpacity: 0.50,
         opacity:     0.85,
       });
 
       rect.on("mouseover", (e) => {
-        rect.setStyle({ fillOpacity:0.70, weight:2.5 });
+        rect.setStyle({ fillOpacity:0.80, weight:2.5 });
         setHoveredCell(cell);
         setTooltipPos({ x:e.originalEvent.clientX, y:e.originalEvent.clientY });
       });
@@ -146,17 +150,14 @@ export default function MapView({ onSelectCell, selectedCell }) {
       });
       rect.on("mouseout", () => {
         const isSelected = selectedCell && cell.id === selectedCell.id;
-        rect.setStyle({ fillOpacity: isSelected ? 0.70 : 0.40, weight: isSelected ? 3 : 1.5 });
+        rect.setStyle({ fillOpacity: isSelected ? 0.75 : 0.50, weight: isSelected ? 3 : 1.5 });
         setHoveredCell(null);
       });
       rect.on("click", () => onSelectCell(cell));
 
-      // Cell ID label
       const label = L.divIcon({
         html:`<div style="font-family:'Space Mono',monospace;font-size:9px;color:#fff;text-shadow:0 0 4px #000,0 0 2px #000;font-weight:700;pointer-events:none;line-height:1;">${cell.id}</div>`,
-        className:"",
-        iconSize:[24,14],
-        iconAnchor:[12,7],
+        className:"", iconSize:[24,14], iconAnchor:[12,7],
       });
       L.marker([cell.lat, cell.lon], { icon:label, interactive:false }).addTo(map);
 
@@ -167,20 +168,42 @@ export default function MapView({ onSelectCell, selectedCell }) {
     return () => { map.remove(); mapInstanceRef.current = null; };
   }, []);
 
-  // Legend config per mode
+  // ── Legend config ──────────────────────────────────────────────────────
   const legendItems = {
-    coverage: [["#22c55e","Strong (>−80 dBm)"],["#f59e0b","Weak (−80 to −100)"],["#ef4444","Dead Zone (<−100)"]],
-    hddi:     [["#22c55e","Adequate (<0.40)"],["#f59e0b","At Risk (0.40–0.65)"],["#ef4444","Hidden Desert (>0.65)"]],
-    gender:   [["#a855f7","≥70% Female"],["#8b5cf6","50–70% Female"],["#6d28d9","35–50%"],["#4c1d95","<35%"]],
-    peak:     [["#22c55e","3/3 Thresholds Met"],["#22d3ee","2/3 Met"],["#f59e0b","1/3 Met"],["#ef4444","0/3 — All Fail"]],
+    coverage: [
+      ["#22c55e", "Strong (> −80 dBm)"],
+      ["#f59e0b", "Weak (−80 to −100)"],
+      ["#ef4444", "Dead Zone (< −100)"],
+    ],
+    hddi: [
+      ["#22c55e", "Adequate (< 0.40)"],
+      ["#f59e0b", "At Risk (0.40–0.65)"],
+      ["#ef4444", "Hidden Desert (> 0.65)"],
+    ],
+    gender: [
+      [GENDER_COLORS.high, "≥ 70% Female"],
+      [GENDER_COLORS.mid,  "50–70% Female"],
+      [GENDER_COLORS.low,  "35–50% Female"],
+      [GENDER_COLORS.vlow, "< 35% Female"],
+    ],
+    peak: [
+      ["#22c55e", "3 / 3 Thresholds Met"],
+      ["#22d3ee", "2 / 3 Met"],
+      ["#f59e0b", "1 / 3 Met"],
+      ["#ef4444", "0 / 3 — All Fail"],
+    ],
   };
+
+  // Gender-specific gradient bar for legend
+  const showGenderGradient = mapMode === "gender";
 
   return (
     <div className="relative w-full h-full">
       <div ref={mapRef} className="w-full h-full rounded-lg" />
 
       {/* Mode switcher */}
-      <div className="absolute top-3 left-14 z-[1000] flex gap-1" style={{ fontFamily:"'Space Mono', monospace" }}>
+      <div className="absolute top-3 left-14 z-[1000] flex gap-1"
+        style={{ fontFamily:"'Space Mono', monospace" }}>
         {MAP_MODES.map(m => (
           <button
             key={m.id}
@@ -198,7 +221,8 @@ export default function MapView({ onSelectCell, selectedCell }) {
 
       {/* Hover Tooltip */}
       {hoveredCell && (
-        <div className="fixed z-[9999] pointer-events-none" style={{ left:tooltipPos.x + 14, top:tooltipPos.y - 10 }}>
+        <div className="fixed z-[9999] pointer-events-none"
+          style={{ left:tooltipPos.x + 14, top:tooltipPos.y - 10 }}>
           <div className="bg-gray-950 border border-gray-700 rounded-lg p-3 shadow-2xl min-w-[200px]"
             style={{ fontFamily:"'Space Mono', monospace" }}>
             <div className="flex items-center gap-2 mb-2 border-b border-gray-700 pb-2">
@@ -213,13 +237,13 @@ export default function MapView({ onSelectCell, selectedCell }) {
             <div className="text-[10px] text-cyan-400 mb-2">{hoveredCell.landmark}</div>
             <div className="space-y-1 text-xs">
               {[
-                { label:"RSRP",         val:`${hoveredCell.rsrp} dBm`,            color:"#9ca3af" },
-                { label:"SINR",         val:`${hoveredCell.sinr} dB`,             color:"#9ca3af" },
-                { label:"DL Speed",     val:`${hoveredCell.downloadSpeed} Mbps`,   color:"#22c55e" },
-                { label:"Peak DL",      val:`${hoveredCell.peak.downloadSpeed} Mbps`, color:"#ef4444" },
-                { label:"Latency",      val:`${hoveredCell.latency} ms`,           color:"#f59e0b" },
-                { label:"NQS",          val:`${Math.round(hoveredCell.nqs)}/100`,  color:"#ffffff" },
-                { label:"Female occ.",  val:`${hoveredCell.female_pct}%`,         color:"#a78bfa" },
+                { label:"RSRP",        val:`${hoveredCell.rsrp} dBm`,               color:"#9ca3af" },
+                { label:"SINR",        val:`${hoveredCell.sinr} dB`,                color:"#9ca3af" },
+                { label:"DL Speed",    val:`${hoveredCell.downloadSpeed} Mbps`,      color:"#22c55e" },
+                { label:"Peak Hr DL",  val:`${hoveredCell.peak.downloadSpeed} Mbps`, color:"#f43f5e" },
+                { label:"Latency",     val:`${hoveredCell.latency} ms`,              color:"#f59e0b" },
+                { label:"NQS",         val:`${Math.round(hoveredCell.nqs)}/100`,     color:"#ffffff" },
+                { label:"Female occ.", val:`${hoveredCell.female_pct}%`,            color: getGenderColor(hoveredCell.female_pct) },
               ].map(({ label, val, color }) => (
                 <div key={label} className="flex justify-between gap-4">
                   <span className="text-gray-500">{label}</span>
@@ -230,9 +254,9 @@ export default function MapView({ onSelectCell, selectedCell }) {
             {/* App suitability mini-badges */}
             <div className="mt-2 pt-2 border-t border-gray-800 flex gap-1 flex-wrap">
               {[
-                { label:"Edu", met:hoveredCell.peakApp.edu },
+                { label:"Edu",    met:hoveredCell.peakApp.edu    },
                 { label:"Health", met:hoveredCell.peakApp.health },
-                { label:"Work", met:hoveredCell.peakApp.work },
+                { label:"Work",   met:hoveredCell.peakApp.work   },
               ].map(({ label, met }) => (
                 <span key={label} className="text-[8px] px-1.5 py-0.5 rounded"
                   style={{ background: met ? "#22c55e22" : "#ef444422", color: met ? "#22c55e" : "#ef4444" }}>
@@ -249,14 +273,40 @@ export default function MapView({ onSelectCell, selectedCell }) {
       <div className="absolute bottom-4 left-4 z-[1000] bg-gray-950/90 border border-gray-700 rounded-lg px-3 py-2 text-xs"
         style={{ fontFamily:"'Space Mono', monospace" }}>
         <div className="text-gray-400 text-[10px] tracking-widest mb-1.5 uppercase">
-          {MAP_MODES.find(m => m.id === mapMode)?.icon} {MAP_MODES.find(m => m.id === mapMode)?.label}
+          {MAP_MODES.find(m => m.id === mapMode)?.icon}{" "}
+          {MAP_MODES.find(m => m.id === mapMode)?.label}
         </div>
-        {(legendItems[mapMode] || []).map(([c, l]) => (
-          <div key={l} className="flex items-center gap-2 mb-1">
-            <span className="w-3 h-3 rounded-sm" style={{ background:c, opacity:0.8 }} />
-            <span className="text-gray-300 text-[10px]">{l}</span>
+
+        {/* Gender gets a gradient bar + labels for clarity */}
+        {showGenderGradient ? (
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <div style={{
+                width: 80, height: 10, borderRadius: 4,
+                background: `linear-gradient(to right, ${GENDER_COLORS.high}, ${GENDER_COLORS.mid}, ${GENDER_COLORS.low}, ${GENDER_COLORS.vlow})`,
+              }} />
+              <div className="flex justify-between w-full text-[9px] text-gray-500">
+                <span>♀ high</span>
+                <span>low ♀</span>
+              </div>
+            </div>
+            {(legendItems.gender || []).map(([c, l]) => (
+              <div key={l} className="flex items-center gap-2 mb-1">
+                <span className="w-3 h-3 rounded-sm flex-shrink-0"
+                  style={{ background:c, opacity:0.9, border:`1px solid ${c}` }} />
+                <span className="text-gray-200 text-[10px]">{l}</span>
+              </div>
+            ))}
           </div>
-        ))}
+        ) : (
+          (legendItems[mapMode] || []).map(([c, l]) => (
+            <div key={l} className="flex items-center gap-2 mb-1">
+              <span className="w-3 h-3 rounded-sm" style={{ background:c, opacity:0.8 }} />
+              <span className="text-gray-300 text-[10px]">{l}</span>
+            </div>
+          ))
+        )}
+
         <div className="border-t border-gray-800 mt-2 pt-1.5 text-[10px] text-gray-600">
           27 cells · L-shape · Click for details
         </div>
