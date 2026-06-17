@@ -169,10 +169,10 @@ function TemporalChart() {
         <XAxis dataKey="name" tick={{ fill:"#6b7280", fontSize:9 }} axisLine={false} tickLine={false} />
         <YAxis tick={{ fill:"#6b7280", fontSize:9 }} axisLine={false} tickLine={false} unit=" Mbps" domain={[0,50]} />
         <Tooltip content={<TT />} />
-        <Bar dataKey="Off-Peak" name="Off-Peak DL" fill="#22c55e" radius={[3,3,0,0]} opacity={0.8}>
+        <Bar dataKey="Off-Peak" name="Off-PEAK HOUR DL" fill="#22c55e" radius={[3,3,0,0]} opacity={0.8}>
           <LabelList dataKey="Off-Peak" position="top" style={{ fill:"#4ade80", fontSize:8 }} formatter={v => `${v}`} />
         </Bar>
-        <Bar dataKey="8–10 AM Peak" name="Peak DL" fill="#ef4444" radius={[3,3,0,0]} opacity={0.8}>
+        <Bar dataKey="8–10 AM Peak" name="PEAK HOUR DL" fill="#ef4444" radius={[3,3,0,0]} opacity={0.8}>
           <LabelList dataKey="8–10 AM Peak" position="top" style={{ fill:"#f87171", fontSize:8 }} formatter={v => `${v}`} />
         </Bar>
       </BarChart>
@@ -462,7 +462,7 @@ function PersonaCard({ p }) {
           <div className="text-red-400 text-xs font-bold">{p.rsrp} dBm</div>
         </div>
         <div className="rounded-lg bg-gray-950 border border-gray-800 p-2">
-          <div className="text-[9px] text-gray-600">Peak DL</div>
+          <div className="text-[9px] text-gray-600">PEAK HOUR DL</div>
           <div className="text-red-400 text-xs font-bold">{p.peakDl} Mbps</div>
         </div>
       </div>
@@ -667,7 +667,7 @@ export default function Dashboard() {
             <table className="w-full text-xs">
               <thead>
                 <tr className="border-b border-gray-800">
-                  {["Cell","Landmark","HDDI","NQS","RSRP","Peak DL","Peak Lat","Edu-Ready","Gender","Tier"].map(h => (
+                  {["Cell","Landmark","HDDI","NQS","RSRP","PEAK HOUR DL","Peak Lat","Edu-Ready","Gender","Tier"].map(h => (
                     <th key={h} className="px-2 py-2 text-left text-gray-600 font-normal text-[10px] uppercase tracking-wider whitespace-nowrap">{h}</th>
                   ))}
                 </tr>
@@ -708,7 +708,7 @@ export default function Dashboard() {
             <table className="w-full text-xs">
               <thead>
                 <tr className="border-b border-gray-800">
-                  {["Cell","Landmark","HDDI","NQS","RSRP","SINR","DL Mbps","Latency","Peak DL","Degrade","Tier"].map(h => (
+                  {["Cell","Landmark","HDDI","NQS","RSRP","SINR","DL Mbps","Latency","PEAK HOUR DL","Degrade","Tier"].map(h => (
                     <th key={h} className="px-2 py-2 text-left text-gray-600 font-normal text-[10px] uppercase tracking-wider whitespace-nowrap">{h}</th>
                   ))}
                 </tr>
